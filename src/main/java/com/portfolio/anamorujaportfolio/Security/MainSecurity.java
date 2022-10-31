@@ -1,3 +1,5 @@
+package com.portfolio.anamorujaportfolio.Security;
+
 
 import com.portfolio.anamorujaportfolio.Security.Service.UserDetailsImpl;
 import com.portfolio.anamorujaportfolio.Security.jwt.JwtEntryPoint;
@@ -31,41 +33,43 @@ public class MainSecurity extends WebSecurityConfigurerAdapter {
         return new JwtTokenFilter();
     }
     
+   
+    
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-    
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtEntryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    
-        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-;    }
+        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);           
+    }
 
     @Override
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
-
+    
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean(); 
+        return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsServicesImpl).passwordEncoder(passwordEncoder());
+       auth.userDetailsService(userDetailsServicesImpl).passwordEncoder(passwordEncoder());
     }
+    
     
     
 }
