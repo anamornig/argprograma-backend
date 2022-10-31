@@ -59,5 +59,6 @@ public class JwtProvider {
         catch(SignatureException e){
             logger.error("Firma no valida");
         }
+        return false;
     }
 }
